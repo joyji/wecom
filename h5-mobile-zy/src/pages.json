@@ -1,0 +1,84 @@
+{
+	"custom": {
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path" : "pages/index/index",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "业务中心"
+			}
+		}, {
+			"path" : "pages/template/index",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "模版index"
+			}
+		}, {
+			"path" : "pages/template/detail",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "企业文化"
+			}
+		}, {
+			"path" : "pages/index/transition",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "业务中心"
+			}
+		},
+		{
+			"path" : "pages/todo/index",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "工作待办"
+			}
+		},{
+			"path" : "pages/todo/list",
+			"style" : 
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "工作待办"
+			}
+		},{
+			"path" : "pages/onlyoffice/index",
+			"style" :
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "文件预览"
+			}
+		},{
+			"path" : "pages/onlyoffice/image",
+			"style" :
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "图片预览"
+			}
+		},{
+			"path" : "pages/uploadview/index",
+			"style" :
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "文件上传"
+			}
+		},{
+			"path" : "pages/simulator/simulator",
+			"style" :
+			{
+				"navigationStyle": "custom",
+				"navigationBarTitleText" : "模拟器"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#468CC8",
+		"backgroundColor": "#F8F8F8"
+	}
+}

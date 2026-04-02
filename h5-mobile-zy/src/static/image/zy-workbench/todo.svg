@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="21px" viewBox="0 0 18 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>我的待办</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#58A3FF" offset="0%"></stop>
+            <stop stop-color="#B6DEFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#F4F9FF" offset="0%"></stop>
+            <stop stop-color="#D4ECFF" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#F4F9FF" offset="0%"></stop>
+            <stop stop-color="#D4ECFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="我的待办">
+            <rect id="矩形" fill="url(#linearGradient-1)" x="0" y="0" width="18" height="21" rx="2"></rect>
+            <path d="M5.16888646,4 L12.8311135,4 C13.4766717,4 14,4.52332829 14,5.16888646 L14,5.22241992 C14,5.86797808 13.4766717,6.39130638 12.8311135,6.39130638 L5.16888646,6.39130638 C4.52332829,6.39130638 4,5.86797808 4,5.22241992 L4,5.16888646 C4,4.52332829 4.52332829,4 5.16888646,4 Z" id="矩形备份-4" fill="url(#linearGradient-2)"></path>
+            <path d="M5.16888646,8.39130638 L12.8311135,8.39130638 C13.4766717,8.39130638 14,8.91463467 14,9.56019284 L14,9.6137263 C14,10.2592845 13.4766717,10.7826128 12.8311135,10.7826128 L5.16888646,10.7826128 C4.52332829,10.7826128 4,10.2592845 4,9.6137263 L4,9.56019284 C4,8.91463467 4.52332829,8.39130638 5.16888646,8.39130638 Z" id="矩形备份-4" fill="url(#linearGradient-2)"></path>
+            <path d="M5.16888642,12.7826128 L7.33111358,12.7826128 C7.97667172,12.7826128 8.5,13.305941 8.5,13.9514992 L8.5,14.0050327 C8.5,14.6505909 7.97667172,15.1739191 7.33111358,15.1739191 L5.16888642,15.1739191 C4.52332828,15.1739191 4,14.6505909 4,14.0050327 L4,13.9514992 C4,13.305941 4.52332828,12.7826128 5.16888642,12.7826128 Z" id="矩形备份-4" fill="url(#linearGradient-3)"></path>
+        </g>
+    </g>
+</svg>

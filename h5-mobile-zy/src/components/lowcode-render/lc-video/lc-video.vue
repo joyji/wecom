@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-video" :style="wrapperStyle">
+  <view :id="props.id" class="lc-video" :style="[wrapperStyle, props.configure?.style]">
     <video
       class="video-player"
       :src="src"

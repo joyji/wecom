@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-rich-text" :style="richStyle">
+  <view :id="props.id" class="lc-rich-text" :style="[richStyle, props.configure?.style]">
     <rich-text :nodes="content"></rich-text>
   </view>
 </template>

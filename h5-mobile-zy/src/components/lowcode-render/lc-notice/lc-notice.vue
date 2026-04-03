@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-notice" :class="`notice-${type}`">
+  <view :id="props.id" class="lc-notice" :class="`notice-${type}`" :style="props.configure?.style">
     <view class="notice-title-row">
       <text v-if="showIcon" class="notice-icon">!</text>
       <text class="notice-title">{{ title }}</text>

@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-spacer" :style="spacerStyle"></view>
+  <view :id="props.id" class="lc-spacer" :style="[spacerStyle, props.configure?.style]"></view>
 </template>
 
 <script setup>

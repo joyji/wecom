@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-button">
+  <view :id="props.id" class="lc-button" :style="props.configure?.style">
     <button
       class="btn"
       :class="[`btn-${btnType}`, `btn-size-${btnSize}`]"

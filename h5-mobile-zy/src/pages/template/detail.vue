@@ -14,7 +14,8 @@
                 <!-- <view class="page-title" v-if="templateConfig.title">{{ templateConfig.title }}</view> -->
                 <view v-for="item in templateConfig.componentList" :key="item.id" class="lc-component-block">
                     <component :is="lcComponents[item.componentName]" v-if="lcComponents[item.componentName]"
-                        :id="item.id" :data="item.propsMap" />
+                        :id="item.id" :data="item.propsMap" :configure="item.configure || {}"
+                        :children="item.children" />
                 </view>
             </view>
 

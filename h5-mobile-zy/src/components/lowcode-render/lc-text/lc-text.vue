@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-text" :style="textStyle">
+  <view :id="props.id" class="lc-text" :style="[textStyle, props.configure?.style]">
     <text class="text-content">{{ text }}</text>
   </view>
 </template>

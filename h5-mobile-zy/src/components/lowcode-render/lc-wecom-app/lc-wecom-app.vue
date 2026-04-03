@@ -1,5 +1,5 @@
 <template>
-    <view class="lc-wecom-app" :style="containerStyle">
+    <view :id="props.id" class="lc-wecom-app" :style="[containerStyle, props.configure?.style]">
         <!-- 空状态 -->
         <view v-if="!images.length" class="empty-state">
             <text class="empty-text">暂无图片</text>

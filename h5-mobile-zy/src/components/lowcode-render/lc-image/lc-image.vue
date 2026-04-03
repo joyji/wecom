@@ -7,7 +7,7 @@
  * @LastEditTime: 2026-04-01 17:43:15
 -->
 <template>
-  <view :id="props.id" class="lc-image" @click="handleClick">
+  <view :id="props.id" class="lc-image" :style="props.configure?.style" @click="handleClick">
     <image
       v-if="src"
       class="image-content"

@@ -17,7 +17,8 @@
             </view>
           </view>
           <component :ref="($event) => setItemRef($event, element.id)" :is="element.componentName" :key="index"
-            :configure="element.configure" :id="element.id" :data="element.propsMap || {}" :edit="true" />
+            :configure="element.configure" :id="element.id" :data="element.propsMap || {}" :edit="true"
+            :children="element.children" />
         </view>
       </template>
     </draggable>

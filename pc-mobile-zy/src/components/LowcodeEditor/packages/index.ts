@@ -26,6 +26,26 @@ export const PAGE_LIBS: LcComponentLibrary[] = [
     ]
   },
   {
+    name: 'FormComponent',
+    label: '表单组件',
+    icon: 'ep:edit',
+    extended: true,
+    components: [
+      'LcForm',
+      'LcInput',
+      'LcTextarea'
+    ]
+  },
+  {
+    name: 'LayoutComponent',
+    label: '布局组件',
+    icon: 'ep:grid',
+    extended: true,
+    components: [
+      'LcCard'
+    ]
+  },
+  {
     name: 'BusinessComponent',
     label: '业务组件',
     icon: 'ep:office-building',

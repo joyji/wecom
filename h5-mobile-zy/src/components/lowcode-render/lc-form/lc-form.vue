@@ -1,20 +1,30 @@
 <template>
   <view :id="props.id" class="lc-form" :style="props.configure?.style">
-    <!-- 递归渲染子组件 -->
-    <template v-if="children && children.length">
-      <template v-for="(col, colIdx) in children" :key="colIdx">
-        <component
-          v-for="child in col"
-          :key="child.id"
-          :is="child.componentName"
-          :id="child.id"
-          :data="child.propsMap || {}"
-          :configure="child.configure || {}"
-          :edit="props.edit"
-          :children="child.children"
-        />
+    <!-- 子组件槽位容器，供编辑器定位 -->
+    <view
+      class="lc-form__slot"
+      :data-lc-slot="0"
+      :data-lc-parent="props.id"
+    >
+      <template v-if="children && children.length">
+        <template v-for="(col, colIdx) in children" :key="colIdx">
+          <component
+            v-for="child in col"
+            :key="child.id"
+            :is="child.componentName"
+            :id="child.id"
+            :data="child.propsMap || {}"
+            :configure="child.configure || {}"
+            :edit="props.edit"
+            :children="child.children"
+          />
+        </template>
       </template>
-    </template>
+      <!-- 编辑态空占位 -->
+      <view v-if="props.edit && (!children || !children.length)" class="lc-form__empty">
+        <text class="lc-form__empty-text">表单内容区（拖入表单组件）</text>
+      </view>
+    </view>
 
     <!-- 按钮区域 -->
     <view class="lc-form__actions" :style="actionsStyle">
@@ -114,6 +124,25 @@ const handleReset = () => {
 .lc-form {
   padding: 12px 0;
   box-sizing: border-box;
+
+  &__slot {
+    box-sizing: border-box;
+  }
+
+  &__empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    margin: 0 16px;
+  }
+
+  &__empty-text {
+    color: #bbb;
+    font-size: 13px;
+  }
 
   &__actions {
     display: flex;

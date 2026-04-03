@@ -12,7 +12,12 @@
     </view>
 
     <!-- 卡片内容区：递归渲染子组件 -->
-    <view class="lc-card__body" :style="bodyStyle">
+    <view
+      class="lc-card__body"
+      :style="bodyStyle"
+      :data-lc-slot="0"
+      :data-lc-parent="props.id"
+    >
       <template v-if="children && children.length">
         <template v-for="(col, colIdx) in children" :key="colIdx">
           <component

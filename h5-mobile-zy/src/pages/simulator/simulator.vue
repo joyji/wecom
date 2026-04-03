@@ -78,6 +78,8 @@ const messageHandler = (e) => {
   if (even === 'init') init(params)
   if (even === 'list') list.value = params
   if (even === 'drop') addWidget(params)
+  if (even === 'dropNested') addNestedWidget(params)
+  if (even === 'deleteNested') deleteNestedWidget(params)
   if (even === 'changeCurrWidget') setCurWidgetId(params.id)
   if (even === 'platform') platformMode.value = params.mode
   if (even === 'deleteWidget') deleteWidget(params.id)
@@ -118,7 +120,26 @@ const listeningDom = () => {
   })
 }
 
-// 计算并发送组件高度
+/**
+ * 扫描某个顶层组件 DOM 根节点内所有 data-lc-slot 区域，
+ * 返回 [{ slotIdx, top, height, childCount }]，top/height 均相对文档顶部（px）
+ */
+const measureSlots = (rootEl) => {
+  if (!rootEl) return []
+  const slotEls = rootEl.querySelectorAll('[data-lc-slot]')
+  return Array.from(slotEls).map((el) => {
+    const rect = el.getBoundingClientRect()
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0
+    return {
+      slotIdx: parseInt(el.getAttribute('data-lc-slot') || '0', 10),
+      top: rect.top + scrollY,
+      height: Math.max(rect.height, 60),
+      childCount: el.children.length
+    }
+  })
+}
+
+// 计算并发送组件高度，同时上报子槽位信息
 const messageHeight = () => {
   list.value?.forEach((item) => {
     const ele = document.getElementById(item.id)
@@ -126,13 +147,20 @@ const messageHeight = () => {
       const { marginTop, marginBottom } = window.getComputedStyle(ele)
       const rect = ele.getBoundingClientRect()
       item.height = parseFloat(marginTop) + parseFloat(marginBottom) + rect.height + 2
+      // 上报子槽位位置（布局/表单容器专用）
+      const slots = measureSlots(ele)
+      if (slots.length > 0) {
+        item.slots = slots
+      } else {
+        delete item.slots
+      }
     }
   })
   const data = JSON.stringify({ type: 'setHeight', params: list.value })
   window.parent.postMessage(data, '*')
 }
 
-// 新增组件
+// 新增顶层组件
 const addWidget = (params) => {
   const { element, newIndex } = params
   if (newIndex >= 0 && element) {
@@ -141,6 +169,71 @@ const addWidget = (params) => {
     list.value.push(element)
   }
   setList()
+}
+
+/**
+ * 向某个布局/表单容器的子槽位插入组件
+ * params: { element, parentId, slotIdx, newIndex }
+ */
+const addNestedWidget = (params) => {
+  const { element, parentId, slotIdx = 0, newIndex } = params
+  const parent = findWidget(list.value, parentId)
+  if (!parent) return
+
+  if (!parent.children) parent.children = []
+  // 确保 slotIdx 对应的列存在
+  while (parent.children.length <= slotIdx) {
+    parent.children.push([])
+  }
+  const col = parent.children[slotIdx]
+  if (newIndex >= 0 && newIndex <= col.length) {
+    col.splice(newIndex, 0, element)
+  } else {
+    col.push(element)
+  }
+  setList()
+}
+
+/**
+ * 从子槽位删除组件（支持任意深度，通过 id 全树搜索）
+ * params: { id }
+ */
+const deleteNestedWidget = (params) => {
+  const { id } = params
+  removeFromChildren(list.value, id)
+  setList()
+}
+
+// 深度优先从 children 中移除指定 id 的组件
+const removeFromChildren = (items, id) => {
+  for (const item of items) {
+    if (!item.children) continue
+    for (let colIdx = 0; colIdx < item.children.length; colIdx++) {
+      const col = item.children[colIdx]
+      const idx = col.findIndex((c) => c.id === id)
+      if (idx !== -1) {
+        col.splice(idx, 1)
+        return true
+      }
+      // 递归
+      if (removeFromChildren(col, id)) return true
+    }
+  }
+  return false
+}
+
+// 全树查找组件（顶层 + 子层）
+const findWidget = (items, id) => {
+  for (const item of items) {
+    if (item.id === id) return item
+    if (item.children) {
+      for (const col of item.children) {
+        const found = findWidget(col, id)
+        if (found) return found
+      }
+    }
+  }
+  return null
 }
 
 // 拖拽排序变更
@@ -166,7 +259,7 @@ const setCurWidgetId = (id) => {
   window.parent.postMessage(data, '*')
 }
 
-// 删除组件并通知父窗口
+// 删除顶层组件并通知父窗口
 const deleteWidget = (id) => {
   const idx = list.value.findIndex((item) => item.id === id)
   if (idx === -1) return

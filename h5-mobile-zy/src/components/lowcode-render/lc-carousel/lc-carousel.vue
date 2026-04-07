@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-carousel">
+  <view :id="props.id" class="lc-carousel" :style="props.configure?.style">
     <swiper
       class="carousel-swiper"
       :autoplay="autoplay"

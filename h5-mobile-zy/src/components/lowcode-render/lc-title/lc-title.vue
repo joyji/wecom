@@ -1,5 +1,5 @@
 <template>
-  <view :id="props.id" class="lc-title" :style="titleStyle">
+  <view :id="props.id" class="lc-title" :style="[titleStyle, props.configure?.style]">
     <text :class="['title-text', `title-${level}`]">{{ text }}</text>
   </view>
 </template>

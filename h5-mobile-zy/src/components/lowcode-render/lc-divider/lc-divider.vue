@@ -7,7 +7,7 @@
  * @LastEditTime: 2026-03-31 13:23:15
 -->
 <template>
-  <view :id="props.id" class="lc-divider" :style="dividerStyle">
+  <view :id="props.id" class="lc-divider" :style="[dividerStyle, props.configure?.style]">
     <view class="divider-line" :style="lineStyle"></view>
   </view>
 </template>

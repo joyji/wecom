@@ -8,16 +8,21 @@
     >
       <template v-if="children && children.length">
         <template v-for="(col, colIdx) in children" :key="colIdx">
-          <component
+          <view
             v-for="child in col"
             :key="child.id"
-            :is="child.componentName"
-            :id="child.id"
-            :data="child.propsMap || {}"
-            :configure="child.configure || {}"
-            :edit="props.edit"
-            :children="child.children"
-          />
+            class="lc-form__child"
+            @click.stop="handleChildClick(child.id)"
+          >
+            <component
+              :is="child.componentName"
+              :id="child.id"
+              :data="child.propsMap || {}"
+              :configure="child.configure || {}"
+              :edit="props.edit"
+              :children="child.children"
+            />
+          </view>
         </template>
       </template>
       <!-- 编辑态空占位 -->
@@ -118,6 +123,13 @@ const handleReset = () => {
     if (field.reset) field.reset()
   })
 }
+
+const handleChildClick = (id) => {
+  if (!props.edit || !id) return
+  if (typeof window === 'undefined') return
+  const data = JSON.stringify({ type: 'setCurrWidget', params: { id } })
+  window.parent.postMessage(data, '*')
+}
 </script>
 
 <style scoped lang="scss">
@@ -126,6 +138,10 @@ const handleReset = () => {
   box-sizing: border-box;
 
   &__slot {
+    box-sizing: border-box;
+  }
+
+  &__child {
     box-sizing: border-box;
   }
 

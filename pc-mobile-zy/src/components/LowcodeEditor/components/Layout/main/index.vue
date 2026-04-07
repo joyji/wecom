@@ -206,13 +206,17 @@ const setList = (params: any) => {
 
 /**
  * 递归将 simulator 回传的 list（含 children）与编辑器原始数据合并，
- * 恢复 props 数组（simulator 只有 propsMap）
+ * 恢复 props 数组（simulator 只有 propsMap）。
+ * 优先级：item 自身携带的 props（新拖入组件）> oldList 中对应 original 的 props
  */
 const mergePropsTree = (newItems: any[], oldItems: any[]): any[] => {
   return newItems.map((item: any) => {
     const original = findInTree(oldItems, item.id)
-    const merged: any = original?.props
-      ? { ...item, props: original.props }
+    // item.props 存在（新拖入时 element 携带了 props[]）直接用自身
+    // 否则从 oldList 中的 original 恢复（编辑器状态中已有）
+    const resolvedProps = item.props || original?.props
+    const merged: any = resolvedProps
+      ? { ...item, props: resolvedProps }
       : item
     if (item.children) {
       merged.children = item.children.map((col: any[], colIdx: number) => {
@@ -307,12 +311,15 @@ const handleComponentChange = (dragEvent: any) => {
     const { element, newIndex } = dragEvent.added
     lcEditor.dragWidget = element
 
+    // 转换 props[] → propsMap，让 simulator 能正确渲染，同时保留 props 供编辑器使用
+    const elementWithPropsMap = buildItemWithPropsMap(element)
+
     iframe.value?.contentWindow?.postMessage(
       JSON.parse(
         JSON.stringify({
           even: 'drop',
           params: {
-            element: lcEditor.dragWidget,
+            element: elementWithPropsMap,
             newIndex
           }
         })
@@ -335,12 +342,15 @@ const handleNestedChange = (dragEvent: any, parentId: string, slotIdx: number) =
     const { element, newIndex } = dragEvent.added
     lcEditor.dragWidget = element
 
+    // 转换 props[] → propsMap，让 simulator 能正确渲染，同时保留 props 供编辑器使用
+    const elementWithPropsMap = buildItemWithPropsMap(element)
+
     iframe.value?.contentWindow?.postMessage(
       JSON.parse(
         JSON.stringify({
           even: 'dropNested',
           params: {
-            element: lcEditor.dragWidget,
+            element: elementWithPropsMap,
             parentId,
             slotIdx,
             newIndex

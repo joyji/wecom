@@ -20,16 +20,21 @@
     >
       <template v-if="children && children.length">
         <template v-for="(col, colIdx) in children" :key="colIdx">
-          <component
+          <view
             v-for="child in col"
             :key="child.id"
-            :is="child.componentName"
-            :id="child.id"
-            :data="child.propsMap || {}"
-            :configure="child.configure || {}"
-            :edit="props.edit"
-            :children="child.children"
-          />
+            class="lc-card__child"
+            @click.stop="handleChildClick(child.id)"
+          >
+            <component
+              :is="child.componentName"
+              :id="child.id"
+              :data="child.propsMap || {}"
+              :configure="child.configure || {}"
+              :edit="props.edit"
+              :children="child.children"
+            />
+          </view>
         </template>
       </template>
 
@@ -85,6 +90,13 @@ const handleClick = () => {
     }
   }
 }
+
+const handleChildClick = (id) => {
+  if (!props.edit || !id) return
+  if (typeof window === 'undefined') return
+  const data = JSON.stringify({ type: 'setCurrWidget', params: { id } })
+  window.parent.postMessage(data, '*')
+}
 </script>
 
 <style scoped lang="scss">
@@ -127,6 +139,10 @@ const handleClick = () => {
   }
 
   &__body {
+    box-sizing: border-box;
+  }
+
+  &__child {
     box-sizing: border-box;
   }
 

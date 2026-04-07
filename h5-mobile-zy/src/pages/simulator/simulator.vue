@@ -108,6 +108,57 @@ const setItemRef = (el, id) => {
   }
 }
 
+// 兼容 props[] 结构，构建运行时 propsMap
+const buildPropsMap = (props = []) => {
+  const propsMap = {}
+  if (!Array.isArray(props)) return propsMap
+  props.forEach((item) => {
+    propsMap[item.code] = { value: item.value }
+    if (item.extraProps) {
+      propsMap[item.code].extraProps = item.extraProps
+    }
+  })
+  return propsMap
+}
+
+const deepClone = (value) => JSON.parse(JSON.stringify(value))
+
+const normalizeWidget = (widget) => {
+  if (!widget || typeof widget !== 'object') return widget
+  const normalized = { ...widget }
+
+  if (!normalized.configure) normalized.configure = {}
+  if (!normalized.propsMap && Array.isArray(normalized.props)) {
+    normalized.propsMap = buildPropsMap(normalized.props)
+  }
+  if (!Array.isArray(normalized.children)) {
+    normalized.children = normalized.children ? [] : normalized.children
+  } else {
+    normalized.children = normalized.children.map((col) =>
+      Array.isArray(col) ? col.map((child) => normalizeWidget(child)) : []
+    )
+  }
+
+  return normalized
+}
+
+/**
+ * 拖拽入参兼容：
+ * 1. 新拖入：通常自带 props/propsMap，直接标准化
+ * 2. 子槽位之间移动：可能只带轻量对象 { id, componentName, height }，按 id 回填完整节点
+ */
+const resolveDroppedWidget = (element) => {
+  if (!element) return null
+  if (element.propsMap || Array.isArray(element.props)) {
+    return normalizeWidget(element)
+  }
+  if (element.id) {
+    const existing = findWidget(list.value, element.id)
+    if (existing) return normalizeWidget(deepClone(existing))
+  }
+  return normalizeWidget(element)
+}
+
 // 监听 DOM 变化，同步组件高度给编辑器
 const instance = getCurrentInstance()
 const listeningDom = () => {
@@ -163,10 +214,12 @@ const messageHeight = () => {
 // 新增顶层组件
 const addWidget = (params) => {
   const { element, newIndex } = params
-  if (newIndex >= 0 && element) {
-    list.value.splice(newIndex, 0, element)
-  } else if (element) {
-    list.value.push(element)
+  const widget = resolveDroppedWidget(element)
+  if (!widget) return
+  if (newIndex >= 0) {
+    list.value.splice(newIndex, 0, widget)
+  } else {
+    list.value.push(widget)
   }
   setList()
 }
@@ -179,6 +232,8 @@ const addNestedWidget = (params) => {
   const { element, parentId, slotIdx = 0, newIndex } = params
   const parent = findWidget(list.value, parentId)
   if (!parent) return
+  const widget = resolveDroppedWidget(element)
+  if (!widget) return
 
   if (!parent.children) parent.children = []
   // 确保 slotIdx 对应的列存在
@@ -187,9 +242,9 @@ const addNestedWidget = (params) => {
   }
   const col = parent.children[slotIdx]
   if (newIndex >= 0 && newIndex <= col.length) {
-    col.splice(newIndex, 0, element)
+    col.splice(newIndex, 0, widget)
   } else {
-    col.push(element)
+    col.push(widget)
   }
   setList()
 }
